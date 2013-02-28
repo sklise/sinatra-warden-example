@@ -28,7 +28,9 @@ class SinatraWardenExample < Sinatra::Base
 
       if user.nil?
         fail!("The username you entered does not exist.")
+        flash.error = ""
       elsif user.authenticate(params['user']['password'])
+        flash.success = "Successfully Logged In"
         success!(user)
       else
         fail!("Could not log in")
@@ -37,22 +39,11 @@ class SinatraWardenExample < Sinatra::Base
   end
 
   get '/' do
-    <<-HTML
-    <p><a href="/auth/login">Log In</a></p>
-    <p><a href="/protected">Protected Page</a></p>
-    <p><a href="/auth/logout">Log Out</a></p>
-    HTML
+    erb :index
   end
 
   get '/auth/login' do
-    <<-HTML
-    <p>#{flash[:error]}</p>
-    <form action="/auth/login" method="post">
-      <p>Username: <input type="text" name="user[username]" /></p>
-      <p>Password: <input type="password" name="user[password]" /></p>
-      <input type="submit" value="Log In" />
-    </form>
-    HTML
+    erb :login
   end
 
   post '/auth/login' do

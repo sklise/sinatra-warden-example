@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sinatra Warden Example</title>
+
+    <style>
+    body {
+      margin: 10px auto;
+      width: 800px;
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Sinatra Warden Example</h1>
+
+    <p><a href="/auth/login">Log In</a> | <a href="/protected">Protected Page</a> | <a href="/auth/logout">Log Out</a></p>
+
+    <% if flash.success %>
+    <div style="color:green;">
+      <%= flash.success %>
+    </div>
+    <% end %>
+
+    <% if flash.error %>
+    <div style="color:red;">
+      <%= flash.error %>
+    </div>
+    <% end %>
+
+    <%= yield %>
+  </body>
+</html>
