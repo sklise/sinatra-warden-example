@@ -75,6 +75,6 @@ class SinatraWardenExample < Sinatra::Base
   get '/protected' do
     env['warden'].authenticate!
 
-    "Protected Page"
+    erb :protected
   end
 end
