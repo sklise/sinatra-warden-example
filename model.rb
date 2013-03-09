@@ -1,5 +1,4 @@
 require 'bcrypt'
-
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
 
 class User
@@ -10,15 +9,6 @@ class User
   property :username, String, length: 128
 
   property :password_hash, BCryptHash
-
-  def password
-    @password ||= Password.new(password_hash)
-  end
-
-  def password=(new_password)
-    @password = Password.create(new_password)
-    self.password_hash = @password
-  end
 
   def authenticate(attempted_password)
     if self.password == attempted_password
@@ -36,10 +26,8 @@ DataMapper.finalize
 DataMapper.auto_upgrade!
 
 # Create a test User
-@users = User.all
-
-if @users.length == 0
-  @user = User.create(username: "Admin")
+if User.count == 0
+  @user = User.create(username: "admin")
   @user.password = "admin"
   @user.save
 end
