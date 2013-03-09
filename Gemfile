@@ -1,10 +1,6 @@
-source :rubygems
-
-gem 'sinatra'
-
+source 'https://rubygems.org'
+gem 'sinatra', '1.3.4'
 gem 'rack-flash3', '1.0.1', require: 'rack/flash'
-
-gem 'data_mapper'
-gem 'dm-sqlite-adapter'
-
-gem 'warden'
+gem 'data_mapper', '1.2.0'
+gem 'dm-sqlite-adapter', '1.2.0'
+gem 'warden', '1.2.1'
