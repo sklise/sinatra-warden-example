@@ -28,19 +28,19 @@ When installing the `data_mapper` gem `bcrypt-ruby` is installed as a dependency
 Open up (or create) a file named model.rb and require the gems and set up DataMapper:
 
 ###### /model.rb
-{% highlight ruby %}
+~~~ruby
 require 'rubygems'
 require 'data_mapper'
 require 'dm-sqlite-adapter'
 require 'bcrypt'
 
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
-{% endhighlight %}
+~~~
 
 Now let's create a User model. In addition to including `DataMapper::Resource` we will include the `BCrypt` class (the gem is named 'bcrypt-ruby', it is required as 'bcrypt' and the class is named `BCrypt`).
 
 ###### /model.rb (cont.)
-{% highlight ruby %}
+~~~ruby
 #...
 
 class User
@@ -56,7 +56,7 @@ DataMapper.finalize
 DataMapper.auto_upgrade!
 
 # end of model.rb
-{% endhighlight %}
+~~~
 
 Let's test this code.
 
@@ -96,7 +96,7 @@ I use `bundler` with Sinatra, [this](https://github.com/sklise/sinatra-warden-ex
 We're using `rack-flash3` to show alerts on pages, the first chunk of code will load our gems and create a new Sinatra app and register session support and the flash messages:
 
 ###### /app.rb
-{% highlight ruby %}
+~~~ruby
 require 'bundler'
 Bundler.require
 
@@ -108,12 +108,12 @@ class SinatraWardenExample < Sinatra::Base
   use Rack::Flash, accessorize: [:error, :success]
 
 #...
-{% endhighlight %}
+~~~
 
 Now in the Warden setup. Most of the lines need to be explained so I'll mark up the code with comments. This block tells Warden how to set up, using some code specific to this example, if your user model is named User and has a key of `id` this block should be the same for you, otherwise, replace where you see User with your model's class name.
 
 ###### /app.rb (cont)
-{% highlight ruby%}
+~~~ruby
   use Warden::Manager do |config|
     # Tell Warden how to save our User info into a session.
     # Sessions can only take strings, not Ruby code, we'll store
@@ -139,12 +139,12 @@ Now in the Warden setup. Most of the lines need to be explained so I'll mark up 
   Warden::Manager.before_failure do |env,opts|
     env['REQUEST_METHOD'] = 'POST'
   end
-{% endhighlight %}
+~~~
 
 The last part of setting up Warden is to write the code for the `:password` strategy we called above. In the following block, they keys of `params` which I am using are based on the login form I made.
 
 ###### /app.rb (cont)
-{% highlight ruby %}
+~~~ruby
   Warden::Strategies.add(:password) do
     def valid?
       params['user']['username'] && params['user']['password']
@@ -164,12 +164,12 @@ The last part of setting up Warden is to write the code for the `:password` stra
       end
     end
   end
-{% endhighlight %}
+~~~
 
 Hold on a minute. I called an `authenticate` method on `user`. We need to create such a method in our User class that accepts an attempted password. Back in model.rb we'll add the following:
 
 ###### /model.rb (reopened)
-{% highlight ruby %}
+~~~ruby
 class User
   #...
 
@@ -181,12 +181,12 @@ class User
     end
   end
 end
-{% endhighlight %}
+~~~
 
 Time to define a few routes to handle logging in, logging out and a protected page.
 
 ###### /app.rb (cont)
-{% highlight ruby %}
+~~~ruby
   get '/' do
     erb :index
   end
@@ -227,6 +227,6 @@ Time to define a few routes to handle logging in, logging out and a protected pa
     erb :protected
   end
 end
-{% endhighlight %}
+~~~
 
 The code now is getting a bit long for a blog post. And all of the tricky parts have been detailed. You can download and try out the full app on Github in my [sinatra-warden-example](http://github.com/sklise/sinatra-warden-example).
