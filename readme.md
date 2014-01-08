@@ -114,8 +114,7 @@ Warden is middleware for [Rack](http://rack.github.com/. Sinatra runs on Rack.
 Rack is an adapter to let Sinatra run on many different web servers. Warden
 lives between Rack and Sinatra.
 
-I use `bundler` with Sinatra, [this](https://github.com/stevenklise/sinatra-
-warden-example/blob/master/Gemfile) is the Gemfile for this example app. Before
+I use `bundler` with Sinatra, [this](https://github.com/stevenklise/sinatra-warden-example/blob/master/Gemfile) is the Gemfile for this example app. Before
 You'll need to create that Gemfile in your directory and run the following in
 Terminal:
 
