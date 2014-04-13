@@ -2,6 +2,8 @@
 
 _This readme is copied from the original blog post [on my site](http://skli.se/2013/03/08/sinatra-warden-auth/)._
 
+_UPDATE 4/12/2014, the blog post is now out of date._
+
 In this article I'll explain the basics of authentication and Rack middleware
 and in the process build a complete app with [Sinatra](http://sinatrarb.com),
 [DataMapper](http://datamapper.org) and [Warden](http://github.com/hassox/warden).
@@ -78,7 +80,6 @@ Excellent. We have a User model that stores passwords in an encrypted way.
 
 ## Warden, a Library for Authentication and User Sessions
 
-
 Warden is an excellent gem for authentication with Sinatra. I've found that the documentation for Warden is lacking which is why I'm writing this. If you want to know the why of Warden [read this](https://github.com/hassox/warden/wiki/overview).
 
 You may have seen that there is a gem called [sinatra_warden](https://github.com/jsmestad/sinatra_warden). Why am I not using that? The sinatra_warden gem chooses the routes for logging in and logging out for you and that logic is buried in the gem. I like for all of the routes in my Sinatra apps to be visible at a glance and not squirreled away.
@@ -93,7 +94,7 @@ I use `bundler` with Sinatra, [this](https://github.com/sklise/sinatra-warden-ex
 
     $ bundle install
 
-We're using `rack-flash3` to show alerts on pages, the first chunk of code will load our gems and create a new Sinatra app and register session support and the flash messages:
+We're using `sinatra-flash` to show alerts on pages, the first chunk of code will load our gems and create a new Sinatra app and register session support and the flash messages:
 
 ###### /app.rb
 ~~~ruby
@@ -104,8 +105,8 @@ Bundler.require
 require './model'
 
 class SinatraWardenExample < Sinatra::Base
-  use Rack::Session::Cookie, secret: "nothingissecretontheinternet"
-  use Rack::Flash, accessorize: [:error, :success]
+  enable :sessions
+  register Sinatra::Flash
 
 #...
 ~~~
@@ -155,9 +156,7 @@ The last part of setting up Warden is to write the code for the `:password` stra
 
       if user.nil?
         fail!("The username you entered does not exist.")
-        flash.error = ""
       elsif user.authenticate(params['user']['password'])
-        flash.success = "Successfully Logged In"
         success!(user)
       else
         fail!("Could not log in")
@@ -198,7 +197,7 @@ Time to define a few routes to handle logging in, logging out and a protected pa
   post '/auth/login' do
     env['warden'].authenticate!
 
-    flash.success = env['warden'].message
+    flash[:success] = env['warden'].message
 
     if session[:return_to].nil?
       redirect '/'
@@ -210,14 +209,14 @@ Time to define a few routes to handle logging in, logging out and a protected pa
   get '/auth/logout' do
     env['warden'].raw_session.inspect
     env['warden'].logout
-    flash.success = 'Successfully logged out'
+    flash[:success] = 'Successfully logged out'
     redirect '/'
   end
 
   post '/auth/unauthenticated' do
     session[:return_to] = env['warden.options'][:attempted_path]
     puts env['warden.options'][:attempted_path]
-    flash.error = env['warden'].message || "You must log in"
+    flash[:error] = env['warden'].message || "You must log in"
     redirect '/auth/login'
   end
 
