@@ -15,15 +15,15 @@
 
     <p><a href="/auth/login">Log In</a> | <a href="/protected">Protected Page</a> | <a href="/auth/logout">Log Out</a></p>
 
-    <% if flash.success %>
+    <% if flash[:success] %>
     <div style="color:green;">
-      <%= flash.success %>
+      <%= flash[:success] %>
     </div>
     <% end %>
 
-    <% if flash.error %>
+    <% if flash[:error] %>
     <div style="color:red;">
-      <%= flash.error %>
+      <%= flash[:error] %>
     </div>
     <% end %>
 

@@ -5,8 +5,8 @@ Bundler.require
 require './model'
 
 class SinatraWardenExample < Sinatra::Base
-  use Rack::Session::Cookie, secret: "nothingissecretontheinternet"
-  use Rack::Flash, accessorize: [:error, :success]
+  enable :sessions
+  register Sinatra::Flash
 
   use Warden::Manager do |config|
     # Tell Warden how to save our User info into a session.
@@ -44,9 +44,7 @@ class SinatraWardenExample < Sinatra::Base
 
       if user.nil?
         fail!("The username you entered does not exist.")
-        flash.error = ""
       elsif user.authenticate(params['user']['password'])
-        flash.success = "Successfully Logged In"
         success!(user)
       else
         fail!("Could not log in")
@@ -65,7 +63,7 @@ class SinatraWardenExample < Sinatra::Base
   post '/auth/login' do
     env['warden'].authenticate!
 
-    flash.success = env['warden'].message
+    flash[:success] = env['warden'].message
 
     if session[:return_to].nil?
       redirect '/'
@@ -77,14 +75,15 @@ class SinatraWardenExample < Sinatra::Base
   get '/auth/logout' do
     env['warden'].raw_session.inspect
     env['warden'].logout
-    flash.success = 'Successfully logged out'
+    flash[:success] = 'Successfully logged out'
     redirect '/'
   end
 
   post '/auth/unauthenticated' do
     session[:return_to] = env['warden.options'][:attempted_path]
     puts env['warden.options'][:attempted_path]
-    flash.error = env['warden'].message || "You must log in"
+    puts env['warden']
+    flash[:error] = env['warden'].message || "You must log in"
     redirect '/auth/login'
   end
 
