@@ -2,7 +2,7 @@
 
 _This readme is copied from the original blog post [on my site](http://skli.se/2013/03/08/sinatra-warden-auth/)._
 
-_UPDATE 4/12/2014, the blog post is now out of date._
+_UPDATE 5/18/2014, Switched from Rack::Flash to Sinatra/Flash and added instructions for launching the app._
 
 In this article I'll explain the basics of authentication and Rack middleware
 and in the process build a complete app with [Sinatra](http://sinatrarb.com),
@@ -228,4 +228,35 @@ Time to define a few routes to handle logging in, logging out and a protected pa
 end
 ~~~
 
-The code now is getting a bit long for a blog post. And all of the tricky parts have been detailed. You can download and try out the full app on Github in my [sinatra-warden-example](http://github.com/sklise/sinatra-warden-example).
+## Starting The App
+
+As @Celandir has pointed out, this app uses the [Sinatra modular-style](http://www.sinatrarb.com/intro.html#Modular%20vs.%20Classic%20Style) app. To run a modular app we use a file named `config.ru` (the "ru" stands for rackup).
+
+There are two ways to run this app.
+
+### rackup
+
+When you've ran `bundle install` you'll get a program named 'rackup' which will run the app on port 9292 by default. You need to run "rackup" with the config.ru file, as such:
+
+~~~bash
+$ rackup config.ru
+# [2014-05-18 12:11:27] INFO  WEBrick 1.3.1
+# [2014-05-18 12:11:27] INFO  ruby 2.0.0 (2014-02-24) [x86_64-darwin13.1.0]
+# [2014-05-18 12:11:27] INFO  WEBrick::HTTPServer#start: pid=72027 port=9292
+~~~
+
+With that running in Terminal visit http://localhost:9292 to see the app.
+
+### shotgun
+
+There is a ruby gem called **shotgun** which is very useful in development because it will pick up changes to your ruby files. So you won't need to stop and restart the server every time you change a file. To use shotgun with our config.ru file, you need to tell shotgun which file to use, like so:
+
+~~~bash
+$ shotgun config.ru 
+# == Shotgun/Thin on http://127.0.0.1:9393/
+# >> Thin web server (v1.4.1 codename Chromeo)
+# >> Maximum connections set to 1024
+# >> Listening on 127.0.0.1:9393, CTRL+C to stop
+~~~
+
+Shotgun runs apps on a different port than rackup, if you are using shotgun visit the app at http://localhost:9393.
