@@ -80,7 +80,7 @@ class SinatraWardenExample < Sinatra::Base
   end
 
   post '/auth/unauthenticated' do
-    session[:return_to] = env['warden.options'][:attempted_path]
+    session[:return_to] = env['warden.options'][:attempted_path] if session[:return_to].nil?
     puts env['warden.options'][:attempted_path]
     puts env['warden']
     flash[:error] = env['warden'].message || "You must log in"
