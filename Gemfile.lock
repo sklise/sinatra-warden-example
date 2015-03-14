@@ -76,6 +76,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt-ruby (= 3.0.1)
   data_mapper (= 1.2.0)
   dm-sqlite-adapter (= 1.2.0)
   shotgun (= 0.9.1)
