@@ -155,11 +155,11 @@ The last part of setting up Warden is to write the code for the `:password` stra
       user = User.first(username: params['user']['username'])
 
       if user.nil?
-        fail!("The username you entered does not exist.")
+        throw(:warden, message: "The username you entered does not exist.")
       elsif user.authenticate(params['user']['password'])
         success!(user)
       else
-        fail!("Could not log in")
+        throw(:warden, message: "The username and password combination ")
       end
     end
   end
