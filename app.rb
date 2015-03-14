@@ -4,9 +4,30 @@ Bundler.require
 # load the Database and User model
 require './model'
 
+Warden::Strategies.add(:password) do
+  def valid?
+    params['user'] && params['user']['username'] && params['user']['password']
+  end
+
+  def authenticate!
+    user = User.first(username: params['user']['username'])
+
+    if user.nil?
+      throw(:warden, message: "The username you entered does not exist.")
+      fail!
+    elsif user.authenticate(params['user']['password'])
+      success!(user)
+    else
+      throw(:warden, message: "The username and password combination ")
+      fail!
+    end
+  end
+end
+
 class SinatraWardenExample < Sinatra::Base
   enable :sessions
   register Sinatra::Flash
+  set :session_secret, "supersecret"
 
   use Warden::Manager do |config|
     # Tell Warden how to save our User info into a session.
@@ -32,24 +53,6 @@ class SinatraWardenExample < Sinatra::Base
 
   Warden::Manager.before_failure do |env,opts|
     env['REQUEST_METHOD'] = 'POST'
-  end
-
-  Warden::Strategies.add(:password) do
-    def valid?
-      params['user'] && params['user']['username'] && params['user']['password']
-    end
-
-    def authenticate!
-      user = User.first(username: params['user']['username'])
-
-      if user.nil?
-        fail!("The username you entered does not exist.")
-      elsif user.authenticate(params['user']['password'])
-        success!(user)
-      else
-        fail!("Could not log in")
-      end
-    end
   end
 
   get '/' do
@@ -81,9 +84,9 @@ class SinatraWardenExample < Sinatra::Base
 
   post '/auth/unauthenticated' do
     session[:return_to] = env['warden.options'][:attempted_path] if session[:return_to].nil?
-    puts env['warden.options'][:attempted_path]
-    puts env['warden']
-    flash[:error] = env['warden'].message || "You must log in"
+
+    # Set the error and use a fallback if the message is not defined
+    flash[:error] = env['warden.options'][:message] || "You must log in"
     redirect '/auth/login'
   end
 

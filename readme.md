@@ -1,6 +1,6 @@
 # Sinatra Warden Example
 
-_This readme is copied from the original blog post [on my site](http://skli.se/2013/03/08/sinatra-warden-auth/)._
+_This readme is copied from the original blog post [on my site](http://sklise.com/2013/03/08/sinatra-warden-auth/)._
 
 _UPDATE 5/18/2014, Switched from Rack::Flash to Sinatra/Flash and added instructions for launching the app._
 
@@ -252,7 +252,7 @@ With that running in Terminal visit http://localhost:9292 to see the app.
 There is a ruby gem called **shotgun** which is very useful in development because it will pick up changes to your ruby files. So you won't need to stop and restart the server every time you change a file. To use shotgun with our config.ru file, you need to tell shotgun which file to use, like so:
 
 ~~~bash
-$ shotgun config.ru 
+$ shotgun config.ru
 # == Shotgun/Thin on http://127.0.0.1:9393/
 # >> Thin web server (v1.4.1 codename Chromeo)
 # >> Maximum connections set to 1024
@@ -260,3 +260,25 @@ $ shotgun config.ru
 ~~~
 
 Shotgun runs apps on a different port than rackup, if you are using shotgun visit the app at http://localhost:9393.
+
+#### shotgun and flash messages
+
+The flash plugin makes use of sessions to store messages across routes. The sessions are stored with a "secret" generated each time the server starts. `shotgun` works by restarting the server at every request, which means your flash messages will be lost.
+
+To enable flash messages with `shotgun`, you must specifically set `:session_secret` using the following:
+
+~~~ruby
+class SinatraWardenExample < Sinatra::Base
+  enable :sessions
+  register Sinatra::Flash
+  set :session_secret, "supersecret"
+#...
+~~~
+
+Always be careful with storing secret keys in your source code. In fact, it's advisable to not do so, and instead use an `ENV` variable as such:
+
+~~~ruby
+set :session_secret, ENV['SESSION_SECRET']
+~~~
+
+I figured this out by reading [this very helpful StackOverflow answer](http://stackoverflow.com/questions/5631862/sinatra-and-session-variables-which-are-not-being-set).
