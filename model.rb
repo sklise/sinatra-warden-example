@@ -1,4 +1,3 @@
-require 'bcrypt'
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db.sqlite")
 
 class User
@@ -11,6 +10,11 @@ class User
   property :password, BCryptHash
 
   def authenticate(attempted_password)
+    # The BCrypt class, which `self.password` is an instance of, has `==` defined to compare a
+    # test plain text string to the encrypted string and converts `attempted_password` to a BCrypt
+    # for the comparison.
+    #
+    # But don't take my word for it, check out the source: https://github.com/codahale/bcrypt-ruby/blob/master/lib/bcrypt/password.rb#L64-L67
     if self.password == attempted_password
       true
     else
