@@ -1,5 +1,7 @@
 {
   "name":"sklise/sinatra-warden",
   "branches": ["master"],
-  "files":["readme.md"]
+  "export_formats": ["html","pdf"],
+  "files":["readme.md"],
+  "theme": "oreillymedia/atlas_tech1c_theme"
 }
