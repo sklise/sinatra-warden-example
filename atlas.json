@@ -1,4 +1,5 @@
 {
   "name":"sklise/sinatra-warden",
+  "branches": ["master"],
   "files":["readme.md"]
 }
