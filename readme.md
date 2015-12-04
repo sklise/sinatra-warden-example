@@ -197,7 +197,7 @@ Time to define a few routes to handle logging in, logging out and a protected pa
   post '/auth/login' do
     env['warden'].authenticate!
 
-    flash[:success] = env['warden'].message
+    flash[:success] = "Successfully logged in"
 
     if session[:return_to].nil?
       redirect '/'
@@ -216,7 +216,7 @@ Time to define a few routes to handle logging in, logging out and a protected pa
   post '/auth/unauthenticated' do
     session[:return_to] = env['warden.options'][:attempted_path]
     puts env['warden.options'][:attempted_path]
-    flash[:error] = env['warden'].message || "You must log in"
+    flash[:error] = env['warden'][:message] || "You must log in"
     redirect '/auth/login'
   end
 

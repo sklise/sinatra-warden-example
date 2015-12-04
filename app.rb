@@ -64,7 +64,7 @@ class SinatraWardenExample < Sinatra::Base
   post '/auth/login' do
     env['warden'].authenticate!
 
-    flash[:success] = env['warden'].message
+    flash[:success] = "Successfully logged in"
 
     if session[:return_to].nil?
       redirect '/'
