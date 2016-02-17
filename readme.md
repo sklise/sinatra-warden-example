@@ -47,7 +47,6 @@ Now let's create a User model. In addition to including `DataMapper::Resource` w
 
 class User
   include DataMapper::Resource
-  include BCrypt
 
   property :id, Serial, :key => true
   property :username, String, :length => 3..50
@@ -138,7 +137,14 @@ Now in the Warden setup. Most of the lines need to be explained so I'll mark up 
   end
 
   Warden::Manager.before_failure do |env,opts|
+    # Because authentication failure can happen on any request but
+    # we handle it only under "post '/auth/unauthenticated'", we need
+    # to change request to POST
     env['REQUEST_METHOD'] = 'POST'
+    # And we need to do the following to work with  Rack::MethodOverride
+    env.each do |key, value|
+      env[key]['_method'] = 'post' if key == 'rack.request.form_hash'
+    end
   end
 ~~~
 
@@ -148,7 +154,7 @@ The last part of setting up Warden is to write the code for the `:password` stra
 ~~~ruby
   Warden::Strategies.add(:password) do
     def valid?
-      params['user']['username'] && params['user']['password']
+      params['user']['username'] && params['user']['password'] && params['user']['password']
     end
 
     def authenticate!
@@ -214,15 +220,16 @@ Time to define a few routes to handle logging in, logging out and a protected pa
   end
 
   post '/auth/unauthenticated' do
-    session[:return_to] = env['warden.options'][:attempted_path]
-    puts env['warden.options'][:attempted_path]
-    flash[:error] = env['warden'][:message] || "You must log in"
+    session[:return_to] = env['warden.options'][:attempted_path] if session[:return_to].nil?
+
+    # Set the error and use a fallback if the message is not defined
+    flash[:error] = env['warden.options'][:message] || "You must log in"
     redirect '/auth/login'
   end
 
   get '/protected' do
     env['warden'].authenticate!
-    @current_user = env['warden'].user
+
     erb :protected
   end
 end
