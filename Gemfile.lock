@@ -1,9 +1,11 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.3.8)
-    bcrypt-ruby (3.0.1)
-    data_objects (0.10.16)
+    addressable (2.4.0)
+    bcrypt (3.1.10)
+    bcrypt-ruby (3.1.5)
+      bcrypt (>= 3.1.3)
+    data_objects (0.10.17)
       addressable (~> 2.1)
     dm-core (1.2.1)
       addressable (~> 2.3)
@@ -35,8 +37,8 @@ GEM
       uuidtools (~> 2.1)
     dm-validations (1.2.0)
       dm-core (~> 1.2.0)
-    do_sqlite3 (0.10.16)
-      data_objects (= 0.10.16)
+    do_sqlite3 (0.10.17)
+      data_objects (= 0.10.17)
     fastercsv (1.5.5)
     json (1.8.3)
     json_pure (1.8.3)
@@ -46,23 +48,23 @@ GEM
       rack
     shotgun (0.9.1)
       rack (>= 1.0)
-    sinatra (1.3.4)
-      rack (~> 1.4)
-      rack-protection (~> 1.3)
-      tilt (~> 1.3, >= 1.3.3)
+    sinatra (1.4.7)
+      rack (~> 1.5)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
     sinatra-flash (0.3.0)
       sinatra (>= 1.0.0)
     stringex (1.5.1)
-    tilt (1.4.1)
+    tilt (2.0.2)
     uuidtools (2.1.5)
-    warden (1.2.3)
+    warden (1.2.6)
       rack (>= 1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  bcrypt-ruby (= 3.0.1)
+  bcrypt-ruby (= 3.1.5)
   dm-core (= 1.2.1)
   dm-migrations (= 1.2.0)
   dm-serializer (= 1.2.2)
@@ -72,9 +74,9 @@ DEPENDENCIES
   dm-types (= 1.2.2)
   dm-validations (= 1.2.0)
   shotgun (= 0.9.1)
-  sinatra (= 1.3.4)
+  sinatra (= 1.4.7)
   sinatra-flash (= 0.3.0)
-  warden (= 1.2.3)
+  warden (= 1.2.6)
 
 BUNDLED WITH
-   1.10.6
+   1.10.3

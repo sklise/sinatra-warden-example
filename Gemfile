@@ -1,11 +1,10 @@
 source 'https://rubygems.org'
-ruby '2.2.3'
 
-gem 'sinatra', '1.3.4'
+gem 'sinatra', '1.4.7'
 gem 'sinatra-flash', '0.3.0', require: 'sinatra/flash'
-gem 'bcrypt-ruby', '3.0.1'
+gem 'bcrypt-ruby', '3.1.5'
 
-gem 'warden', '1.2.3'
+gem 'warden', '1.2.6'
 gem 'shotgun', '0.9.1'
 
 gem 'dm-core', '1.2.1'
