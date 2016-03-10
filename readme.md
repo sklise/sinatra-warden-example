@@ -154,7 +154,7 @@ The last part of setting up Warden is to write the code for the `:password` stra
 ~~~ruby
   Warden::Strategies.add(:password) do
     def valid?
-      params['user']['username'] && params['user']['password'] && params['user']['password']
+      params['user'] && params['user']['username'] && params['user']['password']
     end
 
     def authenticate!
